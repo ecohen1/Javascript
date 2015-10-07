@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <meta charset="utf-8">
+	 <title>NUIT Quiz</title>
+		 <link href='quiz_stylesheet.css' rel='stylesheet' type='text/css'/>
+         <link rel="stylesheet" type="text/css" href='bootstrap.min.css'></script>
+</head>    
+	<script src='jquery-1.9.0.min.js'></script>
+	<script src='QandA.js'></script>
+	<script type="text/javascript">
+    $(document).ready(function(){
+        if (initiate){
+            question_index = 0;
+            num_options = 3;
+            num_correct = 0;
+            $('h1').html("Question " + (question_index+1));
+            $('p').html(questions[question_index]);
+            $("#q1").html(options[question_index][0]);
+            $("#q2").html(options[question_index][1]);
+            $("#q3").html(options[question_index][2]);
+            initiate = false;
+        }
+    });
+        
+	function updateText(index)
+	{
+        $('#q1').html(options[index][0]);
+        $('#q2').html(options[index][1]);
+        $('#q3').html(options[index][2]);
+        $('h1').html("Question " + (index+1));
+        $('p').html(questions[index]);
+	}
+	function clearScreen()
+	{
+		$('.choice').remove();
+        $('span').remove();
+		$('h4').html("<button onClick='window.location.reload()'>Retake</button>");
+		$('h1').html("End of Game");
+	 	$('p').html("You got " + num_correct + " correct! Try again?");
+	}
+	function btnCheck_onclick(option_index)
+	{
+        if (option_index == correct_answers[question_index] || question_index == correct_answers.length - 1)
+	 	{
+	 		num_correct++;
+	 		alert('Correct!');
+	 	}
+	 	else {
+	 		alert("Sorry, incorrect. Next time's the charm!");
+        }
+        question_index++;
+	 	if (question_index == questions.length)
+	 		clearScreen();
+	 	else
+	 		updateText(question_index);
+	 }
+	 </script>
+<body>
+    <div class='header'>
+        <img src='./nuit.png'>
+    </div>
+        <div class='jumbotron text-center'>
+             <form action="" name="form1">
+                 <h1></h1>
+                 <p></p>
+                 <div id='answers' class='text-left'>
+                     <h4></h4>
+                     <button type='button' class='choice' onclick="btnCheck_onclick(0)"><span id='q1'></span></button><br><br>
+                     <button type='button' class='choice' onclick="btnCheck_onclick(1)"><span id='q2'></span></button><br><br>
+                     <button type='button' class='choice' onclick="btnCheck_onclick(2)"><span id='q3'></span></button><br><br>
+                 </div>
+             </form>
+        </div>
+</body>
+</html>
