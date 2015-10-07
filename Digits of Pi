@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Digits of Pi</title>
+    	<link rel='stylesheet' type='text/css' href='pi_stylesheet.css'/>
+</head>
+<body onselectstart="return false">
+	<p>What is "Pi" exactly?</p><h1>0 digits of pi</h1>
+	<a></a>
+    <script src="jquery.js"></script>
+    <script src="pi.js"></script>
+    <script>
+    const init_len = 9;
+    var num_click = 0;
+    var loop = 0;
+    $(document).ready(function(){
+		var a = new Array(init_len);
+		var dig = 0;
+		for (var el = 0; el < a.length; el++) {
+			dig = pi.charAt(el);
+			$('body').append('<a class="noSelect">' + dig + '</a>');
+		}
+	});
+	$(document).on('click','.noSelect',function(){
+		var oA = document.body.getElementsByTagName("a")[1];
+		document.body.removeChild(oA);
+		num_click++;
+		var dig = pi.charAt(init_len+num_click-1);
+		$('body').append('<a class="noSelect">' + dig + '</a>');
+		if (num_click != 1 || num_click != 2)
+			$('h1').html(num_click + ' digits of pi');
+		else
+			$('h1').html('1 digit of pi');
+			$('.tail').remove();
+            /*var pistring = '';
+            var counter = 0;
+            var checkpoint = 0;
+            for (var i=0;i<num_click;i++){
+                if (i%10 == 0){
+                    counter++;
+                    pistring += pi.substring(i*(counter-1),i*counter) + '<br>';
+                    console.log(pistring);
+                }
+            }
+            pistring += pi.substring(num_click-num_click%10,num_click);
+                    console.log(pistring);*/
+
+			$('body').append('<a class="tail">' + '\n' + pi.substring(0,num_click) + '</a>');
+	});
+    </script>
+</body>
+</html>
