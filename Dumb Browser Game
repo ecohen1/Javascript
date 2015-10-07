@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Flash Game</title>
+			<link href='flash_stylesheet.css' rel='stylesheet' type='text/css'/>
+	</head>
+	<script src='jquery.js'></script>
+	<script src='timer.js'></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var num_switch = 0;
+			var on = 0;
+			$(document).keydown(function(e) {
+				if (!on){
+					$('h2').timer();
+					on = 1;
+				}
+				$('h1').html(num_switch);
+				if (parseInt($('h2').data('seconds')) >= 10){
+					$('h2').timer('pause');
+					alert('Game Over!');
+					window.location.reload(true);
+				}
+			    switch(e.which) {
+			        case 37: // left
+			        	$("#ball").animate({marginLeft: "-=7px"},5);
+						$("#munch").animate({marginLeft: "+=7px"},5);   
+						if (parseInt($('#ball').css('margin-left')) < 7) {
+							$('#ball').css('background-color','red');
+							$('#chomp').css('background-color','white');
+							if (parseInt($('#ball').css('margin-left')) > 0){
+								num_switch++;
+							}
+						}  
+						else if ((parseInt($('#ball').css('margin-left')) < 207)){
+							$('#ball').css('background-color','yellow');
+							$('#munch').css('background-color','green');	
+						}
+			        	break;
+
+			        case 39: // right
+			        	$("#ball").animate({marginLeft: "+=7px"},10);
+						$("#munch").animate({marginLeft: "-=7px"},10);
+						if (parseInt($('#ball').css('margin-left')) > 193) {
+							$('#ball').css('background-color','green');
+							$('#munch').css('background-color','white');
+							if (parseInt($('#ball').css('margin-left')) < 200){
+								num_switch++;
+							}
+						}    
+						else if ((parseInt($('#ball').css('margin-left')) > -7)){
+							$('#ball').css('background-color','yellow');	
+							$('#chomp').css('background-color','red');
+						}     	
+			        	break;
+
+			        default: return; // exit this handler for other keys
+			    }
+			    e.preventDefault(); // prevent the default action (scroll / move caret)
+			});
+		});
+	</script>
+	<body>
+		<h1>0</h1>
+		<h2></h2>
+		<table>
+			<tr>
+				<td>
+					<div id="chomp">.</div>
+				</td>
+				<td>
+					<div id="ball">.</div>
+				</td>
+				<td>
+					<div id="munch">.</div>
+				</td>
+			</tr>
+		</table> 
+	</body>
+</html>
