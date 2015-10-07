@@ -1,0 +1,184 @@
+
+
+<!--DESCRIPTION:
+-Simulation of an online store. Products include title, price, and description, displayed in table view.
+-Can be sorted by search bar or by other attributes via a sidebar
+-Front page, which directs to search results when box is typed in.
+
+Structure of the navigation:
+-body (Shop)
+	-input bar
+	-search results (FilteredResults)
+		-products (ListItems)
+			-title, price, desription (Product)
+	-sidebar
+
+State vars:
+-input text
+-filtered list of products (itemList)
+				-->
+
+<div id="container">
+    <!-- This element's contents will be replaced with your component. -->
+</div>
+<!--
+<script src="C:/Users/Joel/Desktop/React/react-0.13.3/react-0.13.3/basic-jsx/shared/thirdparty/es5-shim.min.js"></script>
+<script src="C:/Users/Joel/Desktop/React/react-0.13.3/react-0.13.3/basic-jsx/shared/thirdparty/es5-sham.min.js"></script>
+<script src="C:/Users/Joel/Desktop/React/react-0.13.3/react-0.13.3/basic-jsx/shared/thirdparty/console-polyfill.js"></script>
+<script src="C:/Users/Joel/Desktop/React/react-0.13.3/react-0.13.3/build/react.js"></script>
+<script src="C:/Users/Joel/Desktop/React/react-0.13.3/react-0.13.3/build/JSXTransformer.js"></script>
+-->
+<head>
+    <title>React Shop</title>
+    <link href='stylesheet.css' rel='stylesheet' type='text/css'/>
+</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+<script type='text/jsx'>
+var initialItems = [];
+</script>
+<script src="./products.js"></script>
+<script type="text/jsx">
+
+/** @jsx React.DOM */
+
+var Shop = React.createClass({
+	getInitialState:function(){
+		return (
+			{items: this.props.initialItems}
+		);
+	},
+	changeHandler:function(event){
+		var products = this.props.initialItems;
+		var search_val = document.getElementById("search").value;
+		var minprice = parseInt(document.getElementById("minprice").value);
+		var maxprice = parseInt(document.getElementById("maxprice").value);
+		if (search_val != ""){
+			searchFilteredProducts = products.filter(function(item){
+				return (
+					item.title.toLowerCase().search(search_val.toLowerCase()) !== -1
+				);
+			});
+		}
+		else{
+			searchFilteredProducts = products;
+		}
+		if (minprice) {
+			minpriceFilteredProducts = products.filter(function(item){
+				var price = parseInt(item.price.substring(1));				
+				return (price >= minprice);
+			});
+		}
+		else{
+			minpriceFilteredProducts = products;
+		}
+		if (maxprice){
+			maxpriceFilteredProducts = products.filter(function(item){
+				var price = parseInt(item.price.substring(1));
+				return (price <= maxprice);
+			});
+		}
+		else{
+			maxpriceFilteredProducts = products;
+		}
+		var filteredProducts = products.filter(function(item){
+			return (
+				(searchFilteredProducts.indexOf(item) != -1)
+				&&
+				(minpriceFilteredProducts.indexOf(item) != -1)	
+				&&
+				(maxpriceFilteredProducts.indexOf(item) != -1)					
+			);
+		});
+		this.setState({items: filteredProducts});
+	},
+	render:function(){
+		return (
+			<div>
+				<h1>AMASON</h1>
+				<input id="search" type="text" placeholder="Search Products" onChange={this.changeHandler} />
+				<input id="minprice" type="text" placeholder="Min Price" onChange={this.changeHandler} />
+				<input id="maxprice" type="text" placeholder="Max Price" onChange={this.changeHandler} /><br></br>
+				<h2 id="heading1">Items</h2><h2 id="heading2">Price</h2>
+				<FilteredResults itemList={this.state.items} sortByPrice={this.sortByPrice} />
+				<br></br>
+			</div>
+		);
+	}
+});
+
+var FilteredResults = React.createClass({
+//this class for formatting purposes
+	render:function(){
+		return (
+			<div>
+				<ListItems items={this.props.itemList}/>
+			</div>
+		);
+	}
+});
+
+var ListItems = React.createClass({
+	render:function(){
+		if (this.props.items.length != 0) {
+			return (
+			<ul>
+				{this.props.items.map(function(item){
+					item_count++;
+					var even_bool = item_count%2;
+					return (<li><ProductOddEven item={item} even={even_bool} /></li>);
+				})
+				}
+			</ul>
+			);
+		}
+		else {
+			return <p id="noitems">No items match the search criteria.</p>
+		}
+	}
+});
+
+var ProductOddEven = React.createClass({
+	render:function(){
+		if (this.props.even){
+			return (
+				<table id="producteven">
+                    <Product item={this.props.item}/>
+				</table>
+			);
+		}
+		else {
+			return (
+				<table id="productodd">
+                    <Product item={this.props.item}/>
+				</table>
+			);
+		}
+	}
+});
+
+var Product = React.createClass({
+    render:function(){
+        return (
+            <tbody>
+            <tr id="prod">
+                <td id="image"><img src={this.props.item.imgref}/></td>
+                <td>
+                    <span id="titles"><a href={this.props.item.href}>{this.props.item.title}</a></span>
+                    <span id="prices">{this.props.item.price}</span>
+                    <br></br><br></br><br></br><br></br>
+                    <span id="descriptions">{this.props.item.preview}</span>
+                </td>
+            </tr>
+            </tbody>
+        )
+    }
+});
+
+item_count = 0;
+
+React.render(<Shop initialItems={initialItems}/>, document.getElementById('container'));
+
+</script>
